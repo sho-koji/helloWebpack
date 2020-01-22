@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = {
   mode: 'development', //development、production、noneの3種類。  実行モードにより、コードの圧縮具合が異なります。developmentの時、改行空白、コメントはそのまま。productionの時は改行空白コメントは削除されます
   entry: './src/js/app.js',//エントリーポイントの設定。各モジュールを読み込む設定を書く場所。 （エントリーポイント：モジュール間の依存関係の解析を始める地点のこと。ここに各モジュールのインポート宣言を記述していく。）webpackはエントリーポイントを起点として、import命令を辿って依存するファイルを取得してバンドルします。今回は'./src/js/app.js'がエントリーポイント。'./src/js/app.js'にメインの処理を記述していきます
@@ -14,11 +16,21 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: `${__dirname}/dist`
+            }
+          },
           'css-loader',
           'sass-loader'
         ]
       }
     ]
-  }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "bundled_style.css"
+    })
+  ],  
 };
